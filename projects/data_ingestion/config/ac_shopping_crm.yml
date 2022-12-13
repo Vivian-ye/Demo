@@ -1,0 +1,42 @@
+rds_secret_name: postgres_ac_master
+redshift_secret_name: redshift_ac_master
+rds_schema_name: ac_shopping
+staging_schema_name: staging_vivian
+table_name: customer
+destination_table_name: customer_vivian
+bucket: ac-shopping-datalake
+object_name: ac_shopping_crm_vivian
+primary_key_column: customer_id
+destination_schema_name: ac_shopping_crm
+parameter_name: de_daily_load_ac_shopping_crm_customer
+
+dag_name: de_daily_load_ac_shopping_crm
+
+##test ci cd
+tables:
+  - customer:
+      destination_table_name: customer_vivian
+      export_file_name: customer_vivian.csv
+      s3_file_path: ac_shopping_crm/customer_vivian.csv
+      column_inclusions: ["customer_id",
+                      "first_name",
+                      "last_name",
+                      "gender",
+                      "dob",
+                      "registered_at",
+                      "last_login_at",
+                      "email_address",
+                      "mobile",
+                      "street_1",
+                      "street_2",
+                      "suburb",
+                      "state",
+                      "country",
+                      "postcode",
+                      "created_at",
+                      "updated_at"]
+      update_method: incremental_load
+      incremental_load_columns: ["created_at","updated_at"]
+      copy_extra_params: "CSV DELIMITER AS ',' IGNOREHEADER 1 NULL AS 'NULL'"
+    
+  
